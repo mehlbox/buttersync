@@ -10,8 +10,8 @@ Function:
 
 Usage:
 - copy files from repository to a place you want
-- list folder you want to use in 'include.db
-- point path in 'make-snapshot.sh' to your folde
+- list folder you want to use in 'include.db'
+- point path in 'make-snapshot.sh' to your folder
 - path in 'make-snapshot.sh' must be the same as source in 'push-snapshot.sh'
 - target in 'push-snapshot.sh' must be pointing to your destination folder
 - edit host and port in 'push-snapshot.sh'
