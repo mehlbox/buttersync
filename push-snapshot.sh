@@ -1,11 +1,7 @@
 #!/bin/bash
-source="/media/142cdfce-19b1-40be-8e80-947cc24b22be"
-target="/media/d99cf066-391d-46c1-98ea-f470037ef4bc/BACKUP_mehlbox"
-snapfolder=".snapshot"
-includefile="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/include.db" #same path as script
-host="mehlbox@domain.com"
-port="22"
+source $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/settings
 
+echo $target
   if [ "$(id -u)" != "0" ]; then
     echo "This script must be run as root"
     exit 1

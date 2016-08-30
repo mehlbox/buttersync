@@ -2,19 +2,22 @@
 simple script to transfer btrfs snapshots over a slow or unreliable connection
 
 Function:
-- creating btrfs snapshots with 'make-snapshot.sh'
+
+  make-snapshot.sh:
+- creating btrfs snapshots
 - deleting old snapshots after reaching a set amount of snapshots
-- transfer snapshot to a remote destination with 'push-snapshot.sh'
-- broken transfer will be resumed by next run of 'push-snapshot.sh'
+
+  push-snapshot.sh:
+- transfer snapshot to a remote destination
+- broken transfer will be resumed by next run
 - show progress during transfer
 
 Usage:
 - copy files from repository to a place you want
-- list folder you want to use in 'include.db'
-- point path in 'make-snapshot.sh' to your folder
-- path in 'make-snapshot.sh' must be the same as source in 'push-snapshot.sh'
-- target in 'push-snapshot.sh' must be pointing to your destination folder
-- edit host and port in 'push-snapshot.sh'
+- list btrfs subvolumes you want to be used for snapshots in 'include.db'
+- edit 'settings' file
+- run 'make-snapshot.sh' to create snapshots localy
+- run 'push-snapshot.sh' to transfer snapshot to remote host
 
 Misc:
 - requires btrfs on both machines
