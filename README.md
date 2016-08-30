@@ -3,11 +3,11 @@ simple script to transfer btrfs snapshots over a slow or unreliable connection
 
 Function:
 
-  make-snapshot.sh:
+make-snapshot.sh:
 - creating btrfs snapshots
 - deleting old snapshots after reaching a set amount of snapshots
 
-  push-snapshot.sh:
+push-snapshot.sh:
 - transfer snapshot to a remote destination
 - broken transfer will be resumed by next run
 - show progress during transfer
