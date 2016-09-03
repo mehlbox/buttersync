@@ -1,11 +1,10 @@
 #!/bin/bash
 source $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/settings
 
-echo $target
-  if [ "$(id -u)" != "0" ]; then
-    echo "This script must be run as root"
-    exit 1
-  fi
+if [ "$(id -u)" != "0" ]; then
+  echo "This script must be run as root"
+  exit 1
+fi
 
 while read loopfolder
 do #for each folder
