@@ -6,6 +6,12 @@ if [ "$(id -u)" != "0" ]; then
   exit 1
 fi
 
+#check if connection can be established
+ssh $host -n -p$port
+if [ $? != 0 ]; then
+    exit 1
+fi
+
 while read loopfolder
 do #for each folder
 
