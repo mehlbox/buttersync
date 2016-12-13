@@ -56,11 +56,11 @@ if [ ! -f $source/$loopfolder/$snapfolder/.unfinished.inf ]; then
       continue
     fi
 
-fi #(from check if unfinished snapshot exist)
-
 #mark snapshot as unfinished
     echo $curent > $source/$loopfolder/$snapfolder/.unfinished.inf
     echo "$loopfolder: Snapshot $parent will be updated with $curent"
+
+fi #(from check if unfinished snapshot exist)
 
 #transfer file with rsync
     echo "$loopfolder: File transfer: $(du -sh $source/$loopfolder/$snapfolder/.prep_*~*.tmp)"
