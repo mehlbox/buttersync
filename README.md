@@ -18,10 +18,13 @@ This script will use btrfs send to create a temporary file instead of direct pip
 
 ## Usage:
 - copy files from repository to a place you want
+- copy example files to the folder above all other files
+- rename files / remove >.example<  
 - list btrfs subvolumes you want to be used for snapshots in 'include.db'
 - edit 'settings' file
-- run 'make-snapshot.sh' to create snapshots locally
-- run 'push-snapshot.sh' to transfer snapshot to remote host
+- run 'make-snapshot.sh' to create a snapshots locally
+- run 'local-push-snapshot.sh' to transfer the lates snapshot to localy to another harddisk
+- run 'remote-push-snapshot.sh' to transfer the lates snapshot to remote host
 
 ## Misc:
 - requires btrfs on both machines
