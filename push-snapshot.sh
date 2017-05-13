@@ -1,5 +1,5 @@
 #!/bin/bash
-source $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/settings
+source $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../settings
 
 if [ "$(id -u)" != "0" ]; then
   echo "This script must be run as root"

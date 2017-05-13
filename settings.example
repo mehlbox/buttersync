@@ -1,0 +1,13 @@
+#mandatory settings
+source="/media/142cdfce-19b1-40be-8e80-947cc24b22be"
+target="/media/d99cf066-391d-46c1-98ea-f470037ef4bc/BACKUP_mehlbox"
+host="mehlbox@domain.com"
+
+#optional settings
+port="22"
+snapfolder=".snapshot"
+includefile="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/include.db"
+snapfolder=".snapshot"
+snapname=$(TZ=GMT date +@GMT-%Y.%m.%d-%H.%M.%S)
+snappattern="@GMT-????.??.??-??.??.??"
+count=30
