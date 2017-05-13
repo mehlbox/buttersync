@@ -1,0 +1,3 @@
+- split settings in  settings remote and settings local
+- add export import for huge snapshots to move snapshots with a usb drive
+- move .unfinished.inf to target

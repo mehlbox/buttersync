@@ -24,9 +24,9 @@ This script will use btrfs send to create a temporary file instead of direct pip
 - edit 'settings' file
 - run 'make-snapshot.sh' to create a snapshots locally
 - run 'local-push-snapshot.sh' to transfer the lates snapshot to localy to another harddisk
-- run 'remote-push-snapshot.sh' to transfer the lates snapshot to remote host
+- run 'remote-push-snapshot.sh' to transfer the lates snapshot to remote host # This file is not tested
 
 ## Misc:
 - requires btrfs on both machines
 - use a high kernel
-- tested with Debian Jessie kernel 4.6 connecting to Ubuntu 16.04 kernel 4.4
+- target snapshot will be deleted if an error occurs

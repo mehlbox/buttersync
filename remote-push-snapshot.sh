@@ -62,6 +62,12 @@ if [ ! -f $source/$loopfolder/$snapfolder/.unfinished.inf ]; then
 
 fi #(from check if unfinished snapshot exist)
 
+
+# create folder if necessary
+#if [ ! -d $Rtarget/$loopfolder ]; then  ## ssh inside if ????
+    ssh $host -n -p$port sudo mkdir $Rtarget/$loopfolder 2>/dev/null
+#fi
+
 #transfer file with rsync
     echo "$loopfolder: File transfer: $(du -sh $source/$loopfolder/$snapfolder/.prep_*~*.tmp)"
     rsync -e "ssh -p$port" -P $source/$loopfolder/$snapfolder/.prep_*~*.tmp $host:$Rtarget/$loopfolder/
@@ -78,7 +84,7 @@ fi #(from check if unfinished snapshot exist)
       ssh $host -n -p$port sudo rm $Rtarget/$loopfolder/.prep_*~*.tmp
     else
       echo "$loopfolder: error during snapshot creation."
-      ssh $host -n -p$port sudo btrfs sub del $Rtarget/$loopfolder/$snapfolder/$curent
+      ssh $host -n -p$port sudo btrfs sub del $Rtarget/$loopfolder/$curent
       continue
     fi
 
