@@ -30,7 +30,6 @@ This script will use btrfs send to create a temporary file instead of direct pip
 - requires btrfs on both machines
 - use a high kernel
 - target snapshot will be deleted if an error occurs
-<<<<<<< HEAD
 
 ## Windows previous versions
 You can add the following lines to your smb.conf to make your snapshots visible in the previous versions tab of windows
@@ -41,5 +40,3 @@ shadow:format = @GMT-%Y.%m.%d-%H.%M.%S
 shadow:sort = desc
 shadow:snapdir = .snapshot
 '''
-=======
->>>>>>> ae5d9aba0db528192bd2c91cf5e08c7eae6498b6
