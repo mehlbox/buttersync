@@ -1,3 +1,7 @@
 - split settings in  settings remote and settings local
 - add export import for huge snapshots to move snapshots with a usb drive
 - move .unfinished.inf to target
+<<<<<<< HEAD
+=======
+- examlpe smb.conf to view snapshots in Windows file versions 
+>>>>>>> ae5d9aba0db528192bd2c91cf5e08c7eae6498b6
