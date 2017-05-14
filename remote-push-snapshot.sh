@@ -1,5 +1,6 @@
 #!/bin/bash
 source $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../settings
+echo $Rincludefile
 
 if [ "$(id -u)" != "0" ]; then
   echo "This script must be run as root"
@@ -7,8 +8,9 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 #check if connection can be established
-ssh $host -n -p$port
+ssh $host -n -p$port exit
 if [ $? != 0 ]; then
+    echo "No connection to host"
     exit 1
 fi
 
@@ -19,9 +21,11 @@ do #for each folder
   if [[ $loopfolder == [^[:space:]] ]]; then
     continue
   fi
+echo "# $loopfolder"
 
 #this file should be always be fresh
   if [ -f $source/$loopfolder/$snapfolder/.preprep_*~*.tmp ]; then
+    echo "found some trash - deleting..."
     rm -f $source/$loopfolder/$snapfolder/.preprep_*~*.tmp
   fi
 
@@ -47,6 +51,7 @@ if [ ! -f $source/$loopfolder/$snapfolder/.unfinished.inf ]; then
 
 #Start
 #make file
+    echo "$loopfolder: preparing file for transfer..."
     btrfs send $optionP $source/$loopfolder/$snapfolder/$curent -f $source/$loopfolder/$snapfolder/.preprep_$parent~$curent.tmp
     if [ $? == 0 ]; then
       mv $source/$loopfolder/$snapfolder/.preprep_$parent~$curent.tmp $source/$loopfolder/$snapfolder/.prep_$parent~$curent.tmp
@@ -60,13 +65,14 @@ if [ ! -f $source/$loopfolder/$snapfolder/.unfinished.inf ]; then
     echo $curent > $source/$loopfolder/$snapfolder/.unfinished.inf
     echo "$loopfolder: Snapshot $parent will be updated with $curent"
 
+else
+    echo "resume previous transfer"
 fi #(from check if unfinished snapshot exist)
 
-
 # create folder if necessary
-#if [ ! -d $Rtarget/$loopfolder ]; then  ## ssh inside if ????
-    ssh $host -n -p$port sudo mkdir $Rtarget/$loopfolder 2>/dev/null
-#fi
+if (ssh $host -n -p$port '[ ! -d $Rtarget/$loopfolder ]') ;then
+    ssh $host -n -p$port mkdir $Rtarget/$loopfolder
+fi
 
 #transfer file with rsync
     echo "$loopfolder: File transfer: $(du -sh $source/$loopfolder/$snapfolder/.prep_*~*.tmp)"
