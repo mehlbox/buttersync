@@ -19,7 +19,6 @@ if [ -f $source/$loopfolder/$snapfolder/.unfinished.inf ]; then
     echo "$loopfolder: found unfinished snapshot. Deleting..."
     btrfs sub del $Ltarget/$loopfolder/$(cat $source/$loopfolder/$snapfolder/.unfinished.inf)
     rm -f $source/$loopfolder/$snapfolder/.unfinished.inf
-    continue
 fi
 
 #determine names. Curent snapshot will be based on parent snapshot. Just the differences will be transferred
