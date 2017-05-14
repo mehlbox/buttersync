@@ -15,7 +15,12 @@ do #for each folder
   fi
 
 #check if unfinished snapshot exist
-if [ ! -f $source/$loopfolder/$snapfolder/.unfinished.inf ]; then
+if [ -f $source/$loopfolder/$snapfolder/.unfinished.inf ]; then
+    echo "$loopfolder: found unfinished snapshot. Deleting..."
+    btrfs sub del $Ltarget/$loopfolder/$(cat $source/$loopfolder/$snapfolder/.unfinished.inf)
+    rm -f $source/$loopfolder/$snapfolder/.unfinished.inf
+    continue
+fi
 
 #determine names. Curent snapshot will be based on parent snapshot. Just the differences will be transferred
   ls -d1 $Ltarget/$loopfolder/\@GMT* &>/dev/null
@@ -40,15 +45,18 @@ if [ ! -f $source/$loopfolder/$snapfolder/.unfinished.inf ]; then
     echo $curent > $source/$loopfolder/$snapfolder/.unfinished.inf
     echo "$loopfolder: Snapshot $parent will be updated with $curent"
 
-fi #(from check if unfinished snapshot exist)
+# create folder if necessary
+if [ ! -d $Ltarget/$loopfolder ]; then
+    mkdir $Ltarget/$loopfolder
+fi
 
 #create snapshot directly
-    btrfs send $optionP $source/$loopfolder/$snapfolder/$curent | btrfs receive $Ltarget/$loopfolder
+    btrfs send $optionP $source/$loopfolder/$snapfolder/$curent | btrfs receive $Ltarget/$loopfolder/
     if [ $? == 0 ]; then
       echo "OK"
     else
       echo "$loopfolder: error during snapshot creation."
-      btrfs sub del $Ltarget/$loopfolder/$snapfolder/$curent
+      btrfs sub del $Ltarget/$loopfolder/$curent
       continue
     fi
 
