@@ -7,7 +7,11 @@ make-snapshot.sh:
 - creating btrfs snapshots
 - deleting old snapshots after reaching a set amount of snapshots
 
-push-snapshot.sh:
+local-push-snapshot.sh:
+- transfer snapshot to a local hard drive
+- interrupted transfer will be removed by next run
+
+remote-push-snapshot.sh:
 - transfer snapshot to a remote destination
 - interrupted transfer will be resumed by next run
 - show progress during transfer
@@ -29,7 +33,6 @@ This script will use btrfs send to create a temporary file instead of direct pip
 ## Misc:
 - requires btrfs on both machines
 - use a high kernel
-- target snapshot will be deleted if an error occurs
 
 ## Windows previous versions
 You can add the following lines to your smb.conf to make your snapshots visible in the previous versions tab of windows
