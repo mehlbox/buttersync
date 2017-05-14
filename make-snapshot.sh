@@ -23,9 +23,9 @@ do
   btrfs sub snap -r $source/$loopfolder $source/$loopfolder/$snapfolder/$snapname
 
 #delete old snapshot
-  ls -dr $source/$loopfolder/$snapfolder/$snappattern | tail -n +$count | while read snapshot ; do
+  ls -dr $source/$loopfolder/$snapfolder/$snappattern | tail -n +$Bcount | while read snapshot ; do
   btrfs sub del $snapshot
   done
 
-done < $includefile
+done < $Bincludefile
 

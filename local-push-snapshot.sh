@@ -56,6 +56,7 @@ fi
     else
       echo "$loopfolder: error during snapshot creation."
       btrfs sub del $Ltarget/$loopfolder/$curent
+      rm $source/$loopfolder/$snapfolder/.unfinished.inf
       continue
     fi
 
@@ -64,5 +65,5 @@ fi
       rm $source/$loopfolder/$snapfolder/.unfinished.inf
     fi
 
-done < $includefile # read includefile
+done < $Lincludefile # read includefile
 

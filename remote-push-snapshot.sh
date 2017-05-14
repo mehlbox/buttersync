@@ -85,6 +85,7 @@ fi #(from check if unfinished snapshot exist)
     else
       echo "$loopfolder: error during snapshot creation."
       ssh $host -n -p$port sudo btrfs sub del $Rtarget/$loopfolder/$curent
+      rm $source/$loopfolder/$snapfolder/.unfinished.inf
       continue
     fi
 
@@ -93,5 +94,5 @@ fi #(from check if unfinished snapshot exist)
       rm $source/$loopfolder/$snapfolder/.unfinished.inf
     fi
 
-done < $includefile # read includefile
+done < $Rincludefile # read includefile
 
