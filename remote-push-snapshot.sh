@@ -1,6 +1,5 @@
 #!/bin/bash
 source $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../settings
-echo $Rincludefile
 
 if [ "$(id -u)" != "0" ]; then
   echo "This script must be run as root"
@@ -21,7 +20,6 @@ do #for each folder
   if [[ $loopfolder == [^[:space:]] ]]; then
     continue
   fi
-echo "# $loopfolder"
 
 #this file should be always be fresh
   if [ -f $source/$loopfolder/$snapfolder/.preprep_*~*.tmp ]; then
