@@ -33,10 +33,13 @@ do
 
 # check
 if [ -f /tmp/buttersync-$loopfolder ]; then
-    echo "$loopfolder: Another process of buttersync is currently working with this directory. Try again later"
-    continue
+    ps -p $(cat /tmp/buttersync-$loopfolder)&>/dev/null
+    if [ $? == 0 ]; then
+	echo "$loopfolder: Another process of buttersync is accessing this directory. Try again later"
+	continue
+    fi
 fi
-touch /tmp/buttersync-$loopfolder
+echo $$>/tmp/buttersync-$loopfolder
 
 # create folder
   if [ ! -d "$source/$loopfolder/$snapfolder" ]; then
