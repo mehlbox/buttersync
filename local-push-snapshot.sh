@@ -53,16 +53,12 @@ fi
     btrfs send $optionP $source/$loopfolder/$snapfolder/$curent | btrfs receive $Ltarget/$loopfolder/
     if [ $? == 0 ]; then
       echo "OK"
+      rm $source/$loopfolder/$snapfolder/.unfinished.inf
     else
       echo "$loopfolder: error during snapshot creation."
       btrfs sub del $Ltarget/$loopfolder/$curent
       rm $source/$loopfolder/$snapfolder/.unfinished.inf
       continue
-    fi
-
-#remove unfinished mark
-    if [ $? == 0 ]; then
-      rm $source/$loopfolder/$snapfolder/.unfinished.inf
     fi
 
 done < $Lincludefile # read includefile

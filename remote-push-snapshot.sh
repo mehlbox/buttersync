@@ -22,7 +22,7 @@ do #for each folder
   fi
 
 #this file should be always be fresh
-  if [ -f $source/$loopfolder/$snapfolder/.preprep_*~*.tmp ]; then
+  if [ -a $source/$loopfolder/$snapfolder/.preprep_*~*.tmp ]; then
     echo "found some trash - deleting..."
     rm -f $source/$loopfolder/$snapfolder/.preprep_*~*.tmp
   fi
@@ -75,27 +75,21 @@ fi
 #transfer file with rsync
     echo "$loopfolder: File transfer: $(du -sh $source/$loopfolder/$snapfolder/.prep_*~*.tmp)"
     rsync -e "ssh -p$port" -P $source/$loopfolder/$snapfolder/.prep_*~*.tmp $host:$Rtarget/$loopfolder/
-    if [ $? == 0 ]; then
-      rm $source/$loopfolder/$snapfolder/.prep_*~*.tmp
-    else
+    if [ $? != 0 ]; then
       echo "$loopfolder: error during rsync file transfer."
       continue
     fi
 
 #create snapshot from file
-    ssh $host -n -p$port sudo btrfs receive -f $Rtarget/$loopfolder/.prep_*~*.tmp $Rtarget/$loopfolder
+    ssh $host -n -p$port btrfs receive -f $Rtarget/$loopfolder/.prep_*~*.tmp $Rtarget/$loopfolder
     if [ $? == 0 ]; then
-      ssh $host -n -p$port sudo rm $Rtarget/$loopfolder/.prep_*~*.tmp
+      ssh $host -n -p$port rm $Rtarget/$loopfolder/.prep_*~*.tmp
+      rm $source/$loopfolder/$snapfolder/.prep_*~*.tmp
+      rm $source/$loopfolder/$snapfolder/.unfinished.inf
     else
       echo "$loopfolder: error during snapshot creation."
-      ssh $host -n -p$port sudo btrfs sub del $Rtarget/$loopfolder/$curent
-      rm $source/$loopfolder/$snapfolder/.unfinished.inf
+      ssh $host -n -p$port btrfs sub del $Rtarget/$loopfolder/$curent
       continue
-    fi
-
-#remove unfinished mark
-    if [ $? == 0 ]; then
-      rm $source/$loopfolder/$snapfolder/.unfinished.inf
     fi
 
 done < $Rincludefile # read includefile
