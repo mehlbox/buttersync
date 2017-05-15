@@ -1,10 +1,28 @@
 #!/bin/bash
-source $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../settings
-
 if [ "$(id -u)" != "0" ]; then
   echo "This script must be run as root"
   exit 1
 fi
+
+if [ -f $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../settings ]; then
+    source $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../settings
+else
+    echo "cannot find settings file"
+    exit 1
+fi
+
+if [ -z $source ];then
+    echo "source must be defined in settings file"
+    exit 1
+fi
+
+if [ -z $Bcount ];then
+    echo "Bcount must be defined in settings file"
+    exit 1
+fi
+
+
+
 
 while read loopfolder
 do
