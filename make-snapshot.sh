@@ -26,11 +26,17 @@ fi
 
 while read loopfolder
 do
-
 # skip empty line
   if [ -z $loopfolder ]; then
     continue
   fi
+
+# check
+if [ -f /tmp/buttersync-$loopfolder ]; then
+    echo "$loopfolder: Another process of buttersync is currently working with this directory. Try again later"
+    exit 1
+fi
+touch /tmp/buttersync-$loopfolder
 
 # create folder
   if [ ! -d "$source/$loopfolder/$snapfolder" ]; then
@@ -45,5 +51,6 @@ do
   btrfs sub del $snapshot
   done
 
+rm /tmp/buttersync-$loopfolder
 done < $Bincludefile
 
