@@ -34,7 +34,7 @@ do
 # check
 if [ -f /tmp/buttersync-$loopfolder ]; then
     echo "$loopfolder: Another process of buttersync is currently working with this directory. Try again later"
-    exit 1
+    continue
 fi
 touch /tmp/buttersync-$loopfolder
 
