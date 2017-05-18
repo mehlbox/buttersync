@@ -83,7 +83,6 @@ fi
     rsync -e "ssh -p$port" -P $source/$loopfolder/$snapfolder/.prep_*~*.tmp $host:$Rtarget/$loopfolder/
     if [ $? != 0 ]; then
       echo "$loopfolder: error during rsync file transfer."
-      rm /tmp/buttersync-$loopfolder
       continue
     fi
 
@@ -99,5 +98,6 @@ fi
       continue
     fi
 
+rm /tmp/buttersync-$loopfolder
 done < $Rincludefile # read includefile
 
