@@ -71,6 +71,11 @@ fi
       continue
     fi
 
+#delete old snapshot
+  ls -dr $Ltarget/$loopfolder/$snappattern | tail -n +$Lcount | while read snapshot ; do
+  btrfs sub del $snapshot
+  done
+
 #rm /tmp/buttersync-$loopfolder
 done < $Lincludefile # read includefile
 
