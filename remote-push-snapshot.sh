@@ -88,6 +88,7 @@ fi
     fi
 
 #create snapshot from file
+#this area needs a remote unfinished check
     ssh $host -n -p$port btrfs receive -f $Rtarget/$loopfolder/.prep_*~*.tmp $Rtarget/$loopfolder
     if [ $? == 0 ]; then
       ssh $host -n -p$port rm $Rtarget/$loopfolder/.prep_*~*.tmp
@@ -95,7 +96,6 @@ fi
     else
       echo "$loopfolder: error during snapshot creation."
       ssh $host -n -p$port btrfs sub del $Rtarget/$loopfolder/$curent
-      rm /tmp/buttersync-$loopfolder
       continue
     fi
 
