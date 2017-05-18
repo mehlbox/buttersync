@@ -37,8 +37,8 @@ echo $$>/tmp/buttersync-$loopfolder
     rm -f $source/$loopfolder/$snapfolder/.preprep_*~*.tmp
   fi
 
-#check if unfinished snapshot exist
-if [ ! -f $source/$loopfolder/$snapfolder/.unfinished.inf ]; then
+#check if unfinished prep file exist
+if [ ! -f $source/$loopfolder/$snapfolder/.prep_*~*.tmp ]; then
 
 #determine names. Curent snapshot will be based on parent snapshot. Just the differences will be transferred
   ssh $host -n -p$port "ls -d1 $Rtarget/$loopfolder/\@GMT* &>/dev/null"
@@ -59,7 +59,7 @@ if [ ! -f $source/$loopfolder/$snapfolder/.unfinished.inf ]; then
 
 #Start
 #make file
-    echo "$loopfolder: preparing file for transfer..."
+    echo "$loopfolder: preparing file for transfer... Snapshot $parent will be updated with $curent"
     btrfs send $optionP $source/$loopfolder/$snapfolder/$curent -f $source/$loopfolder/$snapfolder/.preprep_$parent~$curent.tmp
     if [ $? == 0 ]; then
       mv $source/$loopfolder/$snapfolder/.preprep_$parent~$curent.tmp $source/$loopfolder/$snapfolder/.prep_$parent~$curent.tmp
@@ -68,10 +68,6 @@ if [ ! -f $source/$loopfolder/$snapfolder/.unfinished.inf ]; then
       echo "$loopfolder: error during file creation."
       continue
     fi
-
-#mark snapshot as unfinished
-    echo $curent > $source/$loopfolder/$snapfolder/.unfinished.inf
-    echo "$loopfolder: Snapshot $parent will be updated with $curent"
 
 else
     echo "resume previous transfer"
@@ -87,6 +83,7 @@ fi
     rsync -e "ssh -p$port" -P $source/$loopfolder/$snapfolder/.prep_*~*.tmp $host:$Rtarget/$loopfolder/
     if [ $? != 0 ]; then
       echo "$loopfolder: error during rsync file transfer."
+      rm /tmp/buttersync-$loopfolder
       continue
     fi
 
@@ -95,13 +92,12 @@ fi
     if [ $? == 0 ]; then
       ssh $host -n -p$port rm $Rtarget/$loopfolder/.prep_*~*.tmp
       rm $source/$loopfolder/$snapfolder/.prep_*~*.tmp
-      rm $source/$loopfolder/$snapfolder/.unfinished.inf
     else
       echo "$loopfolder: error during snapshot creation."
       ssh $host -n -p$port btrfs sub del $Rtarget/$loopfolder/$curent
+      rm /tmp/buttersync-$loopfolder
       continue
     fi
 
-rm /tmp/buttersync-$loopfolder
 done < $Rincludefile # read includefile
 
