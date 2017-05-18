@@ -31,7 +31,7 @@ do
     continue
   fi
 
-# check
+# check pid
 if [ -f /tmp/buttersync-$loopfolder ]; then
     ps -p $(cat /tmp/buttersync-$loopfolder)&>/dev/null
     if [ $? == 0 ]; then

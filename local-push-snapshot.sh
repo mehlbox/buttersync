@@ -14,6 +14,16 @@ do #for each folder
     continue
   fi
 
+# check pid
+if [ -f /tmp/buttersync-$loopfolder ]; then
+    ps -p $(cat /tmp/buttersync-$loopfolder)&>/dev/null
+    if [ $? == 0 ]; then
+        echo "$loopfolder: Another process of buttersync is accessing this directory. Try again later"
+        continue
+    fi
+fi
+echo $$>/tmp/buttersync-$loopfolder
+
 #check if unfinished snapshot exist
 if [ -f $source/$loopfolder/$snapfolder/.unfinished.inf ]; then
     echo "$loopfolder: found unfinished snapshot. Deleting..."
@@ -61,5 +71,6 @@ fi
       continue
     fi
 
+#rm /tmp/buttersync-$loopfolder
 done < $Lincludefile # read includefile
 
