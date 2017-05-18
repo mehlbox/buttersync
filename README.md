@@ -43,6 +43,7 @@ shadow:format = @GMT-%Y.%m.%d-%H.%M.%S
 shadow:sort = desc
 shadow:snapdir = .snapshot
 ```
+<img src="http://www.techsupportalert.com/files/images/pc_freeware/techtips/previous-versions-1.png">
 
 ## coming soon
 - export import function for huge snapshots to make the initial transfer with a usb drive
