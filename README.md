@@ -47,5 +47,4 @@ shadow:snapdir = .snapshot
 
 ## coming soon
 - export import function for huge snapshots to make the initial transfer with a usb drive
-- mark unfinished snapshots on target to prevent mixing up status with other targets
-- autoremove snapshots on targets
+- mark unfinished snapshots on target too
