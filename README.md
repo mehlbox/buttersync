@@ -10,11 +10,13 @@ make-snapshot.sh:
 local-push-snapshot.sh:
 - transfer snapshot to a local hard drive
 - interrupted transfer will be removed by next run
+- deleting old snapshots after reaching a set amount of snapshots
 
 remote-push-snapshot.sh:
 - transfer snapshot to a remote destination
 - interrupted transfer will be resumed by next run
 - show progress during transfer
+- deleting old snapshots after reaching a set amount of snapshots
 
 ## what's so special about this?
 Usually you would use btrfs send and btrfs receive to transfer btrfs snapshots from one place to another using standard piping. You can even tunnel the btrfs pipe stream through ssh to any other machine in the world. The downside of using this is that btrfs cannot handle an aborted snapshot creation.
@@ -32,7 +34,7 @@ This script will use btrfs send to create a temporary file instead of direct pip
 
 ## Misc:
 - requires btrfs on both machines
-- use a high kernel
+- no installation on remote machine
 
 ## Windows previous versions
 You can add the following lines to your smb.conf to make your snapshots visible in the previous versions tab of windows
