@@ -35,6 +35,7 @@ This script will use btrfs send to create a temporary file instead of direct pip
 ## Misc:
 - requires btrfs on both machines
 - no installation on remote machine
+- Initial remote sync requires additional space on your harddrive to create a temporary file. This file will have the size of your subvolume.
 
 ## Windows previous versions
 You can add the following lines to your smb.conf to make your snapshots visible in the previous versions tab of windows
