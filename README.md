@@ -3,20 +3,20 @@ simple script to transfer btrfs snapshots over a slow or unreliable connection
 
 ## Function:
 
-make-snapshot.sh:
-- creating btrfs snapshots
-- deleting old snapshots after reaching a set amount of snapshots
+buttersync-create.sh:
+- create btrfs snapshots
+- delete old snapshots after reaching a set amount of snapshots
 
-local-push-snapshot.sh:
-- transfer snapshot to a local hard drive
-- interrupted transfer will be removed by next run
-- deleting old snapshots after reaching a set amount of snapshots
+buttersync-local-copy.sh:
+- copy snapshot to a local hard drive
+- interrupted copy will be deleted by next run
+- delete old snapshots after reaching a set amount of snapshots
 
-remote-push-snapshot.sh:
+buttersync-remote-sync.sh:
 - transfer snapshot to a remote destination
 - interrupted transfer will be resumed by next run
 - show progress during transfer
-- deleting old snapshots after reaching a set amount of snapshots
+- delete old snapshots after reaching a set amount of snapshots
 
 ## what's so special about this?
 Usually you would use btrfs send and btrfs receive to transfer btrfs snapshots from one place to another using standard piping. You can even tunnel the btrfs pipe stream through ssh to any other machine in the world. The downside of using this is that btrfs cannot handle an aborted snapshot creation.
@@ -28,9 +28,9 @@ This script will use btrfs send to create a temporary file instead of direct pip
 - rename files / remove >.example<  
 - list btrfs subvolumes you want to be used for snapshots in 'include.db'
 - edit 'settings' file
-- run 'make-snapshot.sh' to create a snapshots locally
-- run 'local-push-snapshot.sh' to transfer the lates snapshot to localy to another harddisk
-- run 'remote-push-snapshot.sh' to transfer the lates snapshot to remote host
+- run 'buttersync-create.sh' to create a snapshots locally
+- run 'buttersync-local-copy.sh' to copy the lates snapshot localy to another harddisk
+- run 'buttersync-remote-sync.sh' to transfer the lates snapshot to a remote host
 
 ## Misc:
 - requires btrfs on both machines
