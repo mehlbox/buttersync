@@ -1,28 +1,31 @@
 #!/bin/bash
-if [ "$(id -u)" != "0" ]; then
-  echo "This script must be run as root"
-  exit 1
-fi
+# general
+if [ "$(id -u)" != "0" ]; then echo "This script must be run as root"; exit 1; fi
 
-if [ -f $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../settings ]; then
-    source $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../settings
+# check for setting file in the buttersync directory or in the directory above
+if [ -f $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/settings ]; then
+    source $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/settings
 else
-    echo "cannot find settings file"
-    exit 1
+    if [ -f $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../settings ]; then
+    	source $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../settings
+    else
+    	echo "cannot find settings file"
+    	exit 1
+    fi
 fi
 
-if [ -z $source ];then
-    echo "source must be defined in settings file"
-    exit 1
-fi
+# if not defined in settings file
+if [ -z $Bincludefile ]; then Bincludefile="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../include-basic.db"; fi
+if [ -z $Lincludefile ]; then Lincludefile="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../include-local.db"; fi
+if [ -z $Rincludefile ]; then Rincludefile="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../include-remote.db"; fi
+if [ -z $snapname ]; then snapname=$(TZ=GMT date +@GMT-%Y.%m.%d-%H.%M.%S); fi
+if [ -z $snappattern ]; then snappattern="@GMT-????.??.??-??.??.??"; fi
+if [ -z $snapfolder ]; then snapfolder=".snapshot"; fi
 
-if [ -z $Bcount ];then
-    echo "Bcount must be defined in settings file"
-    exit 1
-fi
+if [ -z $source ]; then echo "source must be defined in settings file"; exit 1; fi
 
-
-
+# specific 
+if [ -z $Bcount ]; then echo "Bcount must be defined in settings file"; exit 1; fi
 
 while read loopfolder
 do
