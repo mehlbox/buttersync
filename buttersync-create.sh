@@ -14,10 +14,15 @@ else
     fi
 fi
 
+# check for include file.
+if [ -f "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../.buttersync-include" ]
+then
+	includefile="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../.buttersync-include"
+else
+	echo "include file not found"
+	exit 1
+fi
 # if not defined in settings file
-if [ -z $Bincludefile ]; then Bincludefile="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../include-basic.db"; fi
-if [ -z $Lincludefile ]; then Lincludefile="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../include-local.db"; fi
-if [ -z $Rincludefile ]; then Rincludefile="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../include-remote.db"; fi
 if [ -z $snapname ]; then snapname=$(TZ=GMT date +@GMT-%Y.%m.%d-%H.%M.%S); fi
 if [ -z $snappattern ]; then snappattern="@GMT-????.??.??-??.??.??"; fi
 if [ -z $snapfolder ]; then snapfolder=".snapshot"; fi
@@ -58,5 +63,5 @@ echo $$>/tmp/buttersync-$loopfolder
   done
 
 rm /tmp/buttersync-$loopfolder
-done < $Bincludefile
+done < $includefile
 
