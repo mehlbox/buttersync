@@ -63,10 +63,10 @@ fi
 echo $$>/tmp/buttersync-$loopfolder
 
 #check if unfinished snapshot exist
-if [ -f $source/$loopfolder/$snapfolder/.unfinished.inf ]; then
+if [ -f $source/$loopfolder/$snapfolder/.buttersync-unfinished.mark ]; then
     echo "$loopfolder: found unfinished snapshot. Deleting..."
-    btrfs sub del $Ltarget/$loopfolder/$(cat $source/$loopfolder/$snapfolder/.unfinished.inf)
-    rm -f $source/$loopfolder/$snapfolder/.unfinished.inf
+    btrfs sub del $Ltarget/$loopfolder/$(cat $source/$loopfolder/$snapfolder/.buttersync-unfinished.mark)
+    rm -f $source/$loopfolder/$snapfolder/.buttersync-unfinished.mark
 fi
 
 #determine names. Curent snapshot will be based on parent snapshot. Just the differences will be transferred
@@ -89,7 +89,7 @@ fi
 #Start
 
 #mark snapshot as unfinished
-    echo $curent > $source/$loopfolder/$snapfolder/.unfinished.inf
+    echo $curent > $source/$loopfolder/$snapfolder/.buttersync-unfinished.mark
     echo "$loopfolder: Snapshot $parent will be updated with $curent"
 
 # create folder if necessary
@@ -101,11 +101,11 @@ fi
     btrfs send $optionP $source/$loopfolder/$snapfolder/$curent | btrfs receive $Ltarget/$loopfolder/
     if [ $? == 0 ]; then
       echo "OK"
-      rm $source/$loopfolder/$snapfolder/.unfinished.inf
+      rm $source/$loopfolder/$snapfolder/.buttersync-unfinished.mark
     else
       echo "$loopfolder: error during snapshot creation."
       btrfs sub del $Ltarget/$loopfolder/$curent
-      rm $source/$loopfolder/$snapfolder/.unfinished.inf
+      rm $source/$loopfolder/$snapfolder/.buttersync-unfinished.mark
       continue
     fi
 

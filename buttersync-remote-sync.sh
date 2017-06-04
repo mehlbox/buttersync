@@ -65,13 +65,13 @@ fi
 echo $$>/tmp/buttersync-$loopfolder
 
 #this file should be always be fresh
-  if [ -a $source/$loopfolder/$snapfolder/.preprep_*~*.tmp ]; then
+  if [ -a $source/$loopfolder/$snapfolder/.buttersync-prepfile_*~*.tmp ]; then
     echo "found some trash - deleting..."
-    rm -f $source/$loopfolder/$snapfolder/.preprep_*~*.tmp
+    rm -f $source/$loopfolder/$snapfolder/.buttersync-prepfile_*~*.tmp
   fi
 
 #check if unfinished prep file exist
-if [ ! -f $source/$loopfolder/$snapfolder/.prep_*~*.tmp ]; then
+if [ ! -f $source/$loopfolder/$snapfolder/.buttersync-syncfile_*~*.tmp ]; then
 
 #determine names. Curent snapshot will be based on parent snapshot. Just the differences will be transferred
   ssh $host -n -p$port "ls -d1 $Rtarget/$loopfolder/\@GMT* &>/dev/null"
@@ -93,11 +93,11 @@ if [ ! -f $source/$loopfolder/$snapfolder/.prep_*~*.tmp ]; then
 #Start
 #make file
     echo "$loopfolder: preparing file for transfer... Snapshot $parent will be updated with $curent"
-    btrfs send $optionP $source/$loopfolder/$snapfolder/$curent -f $source/$loopfolder/$snapfolder/.preprep_$parent~$curent.tmp
+    btrfs send $optionP $source/$loopfolder/$snapfolder/$curent -f $source/$loopfolder/$snapfolder/.buttersync-prepfile_$parent~$curent.tmp
     if [ $? == 0 ]; then
-      mv $source/$loopfolder/$snapfolder/.preprep_$parent~$curent.tmp $source/$loopfolder/$snapfolder/.prep_$parent~$curent.tmp
+      mv $source/$loopfolder/$snapfolder/.buttersync-prepfile_$parent~$curent.tmp $source/$loopfolder/$snapfolder/.buttersync-syncfile_$parent~$curent.tmp
     else
-      rm $source/$loopfolder/$snapfolder/.preprep_*~*.tmp
+      rm $source/$loopfolder/$snapfolder/.buttersync-prepfile_*~*.tmp
       echo "$loopfolder: error during file creation."
       continue
     fi
@@ -112,8 +112,8 @@ if (ssh $host -n -p$port '[ ! -d $Rtarget/$loopfolder ]') ;then
 fi
 
 #transfer file with rsync
-    echo "$loopfolder: File transfer: $(du -sh $source/$loopfolder/$snapfolder/.prep_*~*.tmp)"
-    rsync -e "ssh -p$port" -P $source/$loopfolder/$snapfolder/.prep_*~*.tmp $host:$Rtarget/$loopfolder/
+    echo "$loopfolder: File transfer: $(du -sh $source/$loopfolder/$snapfolder/.buttersync-syncfile_*~*.tmp)"
+    rsync -e "ssh -p$port" -P $source/$loopfolder/$snapfolder/.buttersync-syncfile_*~*.tmp $host:$Rtarget/$loopfolder/
     if [ $? != 0 ]; then
       echo "$loopfolder: error during rsync file transfer."
       continue
@@ -121,10 +121,10 @@ fi
 
 #create snapshot from file
 #this area needs a remote unfinished check
-    ssh $host -n -p$port btrfs receive -f $Rtarget/$loopfolder/.prep_*~*.tmp $Rtarget/$loopfolder
+    ssh $host -n -p$port btrfs receive -f $Rtarget/$loopfolder/.buttersync-syncfile_*~*.tmp $Rtarget/$loopfolder
     if [ $? == 0 ]; then
-      ssh $host -n -p$port rm $Rtarget/$loopfolder/.prep_*~*.tmp
-      rm $source/$loopfolder/$snapfolder/.prep_*~*.tmp
+      ssh $host -n -p$port rm $Rtarget/$loopfolder/.buttersync-syncfile_*~*.tmp
+      rm $source/$loopfolder/$snapfolder/.buttersync-syncfile_*~*.tmp
     else
       echo "$loopfolder: error during snapshot creation."
       ssh $host -n -p$port btrfs sub del $Rtarget/$loopfolder/$curent
