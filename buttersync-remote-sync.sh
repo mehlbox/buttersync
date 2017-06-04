@@ -119,11 +119,20 @@ fi
       continue
     fi
 
+#check if unfinished snapshot exist
+## not done
+if (ssh $host -n -p$port '[ ! -f $Rtarget/$loopfolder/.buttersync-unfinished.mark') ;then
+	  echo "deleting unfinished snapshot"
+      ssh $host -n -p$port btrfs sub del $Rtarget/$loopfolder/$(ssh $host -n -p$port cat $Rtarget/$loopfolder/.buttersync-unfinished.mark)
+	  ssh $host -n -p$port rm $Rtarget/$loopfolder/.buttersync-unfinished.mark
+fi	
+	
 #create snapshot from file
-#this area needs a remote unfinished check
+	ssh $host -n -p$port echo $curent > $Rtarget/$loopfolder/.buttersync-unfinished.mark
     ssh $host -n -p$port btrfs receive -f $Rtarget/$loopfolder/.buttersync-syncfile_*~*.tmp $Rtarget/$loopfolder
     if [ $? == 0 ]; then
-      ssh $host -n -p$port rm $Rtarget/$loopfolder/.buttersync-syncfile_*~*.tmp
+	  ssh $host -n -p$port rm $Rtarget/$loopfolder/.buttersync-unfinished.mark
+	  ssh $host -n -p$port rm $Rtarget/$loopfolder/.buttersync-syncfile_*~*.tmp
       rm $source/$loopfolder/$snapfolder/.buttersync-syncfile_*~*.tmp
     else
       echo "$loopfolder: error during snapshot creation."
