@@ -22,6 +22,11 @@ else
 	echo "include file not found"
 	exit 1
 fi
+
+
+
+
+
 # if not defined in settings file
 if [ -z $snapname ]; then snapname=$(TZ=GMT date +@GMT-%Y.%m.%d-%H.%M.%S); fi
 if [ -z $snappattern ]; then snappattern="@GMT-????.??.??-??.??.??"; fi
@@ -31,6 +36,13 @@ if [ -z $source ]; then echo "source must be defined in settings file"; exit 1; 
 
 # specific 
 if [ -z $Bcount ]; then echo "Bcount must be defined in settings file"; exit 1; fi
+
+
+
+
+
+
+
 
 while read loopfolder
 do

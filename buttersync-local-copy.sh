@@ -35,7 +35,14 @@ if [ -z $snapfolder ]; then snapfolder=".snapshot"; fi
 if [ -z $source ]; then echo "source must be defined in settings file"; exit 1; fi
 
 # specific
-if [ -z $Lcount ]; then echo "Bcount must be defined in settings file"; exit 1; fi
+if [ -z $Lcount ]; then echo "Lcount must be defined in settings file"; exit 1; fi
+
+
+
+
+
+
+
 
 while read loopfolder
 do #for each folder

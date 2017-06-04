@@ -35,7 +35,7 @@ if [ -z $snapfolder ]; then snapfolder=".snapshot"; fi
 if [ -z $source ]; then echo "source must be defined in settings file"; exit 1; fi
 
 # specific
-if [ -z $Rcount ]; then echo "Bcount must be defined in settings file"; exit 1; fi
+if [ -z $Rcount ]; then echo "Rcount must be defined in settings file"; exit 1; fi
 
 #check if connection can be established
 ssh $host -n -p$port exit
