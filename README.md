@@ -48,5 +48,4 @@ shadow:snapdir = .snapshot
 
 ## coming soon
 - export import function for huge snapshots to make the initial transfer with a usb drive
-- mark unfinished snapshots on target too
 - buttersync as application
