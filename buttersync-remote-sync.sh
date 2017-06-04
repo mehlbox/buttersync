@@ -70,6 +70,14 @@ echo $$>/tmp/buttersync-$loopfolder
     rm -f $source/$loopfolder/$snapfolder/.buttersync-prepfile_*~*.tmp
   fi
 
+#check if unfinished snapshot on target exist
+if ssh $host -n -p$port "[ -f $Rtarget/$loopfolder/.buttersync-unfinished.mark ]" ;then
+echo $(ssh $host -n -p$port cat $Rtarget/$loopfolder/.buttersync-unfinished.mark)
+      echo "found unfinished snapshot. deleting..."
+      ssh $host -n -p$port btrfs sub del $Rtarget/$loopfolder/$(ssh $host -n -p$port cat $Rtarget/$loopfolder/.buttersync-unfinished.mark)
+      ssh $host -n -p$port rm $Rtarget/$loopfolder/.buttersync-unfinished.mark
+fi
+
 #check if unfinished prep file exist
 if [ ! -f $source/$loopfolder/$snapfolder/.buttersync-syncfile_*~*.tmp ]; then
 
@@ -107,8 +115,8 @@ else
 fi #(from check if unfinished snapshot exist)
 
 # create folder if necessary
-if (ssh $host -n -p$port '[ ! -d $Rtarget/$loopfolder ]') ;then
-    ssh $host -n -p$port mkdir $Rtarget/$loopfolder
+if ssh $host -n -p$port "[ ! -d $Rtarget/$loopfolder ]" ;then
+   ssh $host -n -p$port mkdir $Rtarget/$loopfolder
 fi
 
 #transfer file with rsync
@@ -119,20 +127,12 @@ fi
       continue
     fi
 
-#check if unfinished snapshot exist
-## not done
-if (ssh $host -n -p$port '[ ! -f $Rtarget/$loopfolder/.buttersync-unfinished.mark') ;then
-	  echo "deleting unfinished snapshot"
-      ssh $host -n -p$port btrfs sub del $Rtarget/$loopfolder/$(ssh $host -n -p$port cat $Rtarget/$loopfolder/.buttersync-unfinished.mark)
-	  ssh $host -n -p$port rm $Rtarget/$loopfolder/.buttersync-unfinished.mark
-fi	
-	
 #create snapshot from file
-	ssh $host -n -p$port echo $curent > $Rtarget/$loopfolder/.buttersync-unfinished.mark
+    ssh $host -n -p$port "echo $curent > $Rtarget/$loopfolder/.buttersync-unfinished.mark"
     ssh $host -n -p$port btrfs receive -f $Rtarget/$loopfolder/.buttersync-syncfile_*~*.tmp $Rtarget/$loopfolder
     if [ $? == 0 ]; then
-	  ssh $host -n -p$port rm $Rtarget/$loopfolder/.buttersync-unfinished.mark
-	  ssh $host -n -p$port rm $Rtarget/$loopfolder/.buttersync-syncfile_*~*.tmp
+      ssh $host -n -p$port rm $Rtarget/$loopfolder/.buttersync-unfinished.mark
+      ssh $host -n -p$port rm $Rtarget/$loopfolder/.buttersync-syncfile_*~*.tmp
       rm $source/$loopfolder/$snapfolder/.buttersync-syncfile_*~*.tmp
     else
       echo "$loopfolder: error during snapshot creation."
