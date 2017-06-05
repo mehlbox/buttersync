@@ -24,11 +24,11 @@ This script will use btrfs send to create a temporary file instead of direct pip
 
 ## Usage:
 - copy files from repository to a place you want
-- create a '.buttersync-include' file in the directory your subvolumes are at and add the names of your subvolumes. Check the '.example' files to see how it is done.
-- copy the 'settings.example' file to 'settings' and edit it to match your structure
-- run 'buttersync-create.sh' to create a snapshots locally
-- run 'buttersync-local-copy.sh' to copy the lates snapshot localy to another harddisk
-- run 'buttersync-remote-sync.sh' to transfer the lates snapshot to a remote host
+- create a ```.buttersync-include``` file in the directory your subvolumes are at and add the names of your subvolumes. Check the ```*.example``` files to see how it is done.
+- copy the ```settings.example``` file to ```settings``` and edit it to match your structure
+- run ```buttersync-create.sh``` to create a snapshots locally
+- run ```buttersync-local-copy.sh``` to copy the lates snapshot localy to another harddisk
+- run ```buttersync-remote-sync.sh``` to transfer the lates snapshot to a remote host
 
 ## Misc:
 - requires btrfs on both machines
@@ -48,4 +48,4 @@ shadow:snapdir = .snapshot
 
 ## coming soon
 - export import function for huge snapshots to make the initial transfer with a usb drive
-- buttersync as application
+- buttersync as binary file
