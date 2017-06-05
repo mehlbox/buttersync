@@ -1,3 +1,8 @@
+#!/bin/bash
+configfile="/etc/buttersync.conf"
+if [ ! -f $configfile ]
+then
+echo '
 # you have to change this settings before use
 
 ## basic
@@ -20,3 +25,5 @@ Rcount=30
 # snapname=$(TZ=GMT date +@GMT-%Y.%m.%d-%H.%M.%S)
 # snappattern="@GMT-????.??.??-??.??.??"
 # snapfolder=".snapshot"
+'>$configfile
+fi
