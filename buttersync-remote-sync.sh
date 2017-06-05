@@ -141,9 +141,12 @@ fi
     fi
 
 #delete old snapshot
+if [ ! -z $Rcount ]
+then
   ssh $host -n -p$port ls -dr $Rtarget/$loopfolder/$snappattern | tail -n +$Rcount | while read snapshot ; do
   ssh $host -n -p$port btrfs sub del $snapshot
   done
+fi
 
 rm /tmp/buttersync-$loopfolder
 done < $includefile # read includefile
