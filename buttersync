@@ -1,0 +1,97 @@
+#!/bin/bash
+if [ "$(id -u)" != "0" ]; then echo "This script must be run as root"; exit 1; fi
+
+configfile="/etc/buttersync.conf"
+
+if [ ! -f $configfile ] # create configfile
+then
+echo '
+## basic
+#source="/media/142cdfce-19b1-40be-8e80-947cc24b22be"
+#Bcount=30
+
+## local copy 
+#Ltarget="/media/d99cf066-391d-46c1-98ea-f470037ef4bc/BACKUP_mehlbox"
+#Lcount=60
+
+## remote copy
+#host="mehlbox@domain.com"
+#port="22"
+#Rtarget="/media/d99cf066-391d-46c1-98ea-f470037ef4bc/BACKUP_mehlbox"
+#Rcount=90
+
+
+
+## optional settings
+#snapname=$(TZ=GMT date +@GMT-%Y.%m.%d-%H.%M.%S)
+#snappattern="@GMT-????.??.??-??.??.??"
+#snapfolder=".snapshot"
+'>$configfile
+echo "$configfile was created"
+fi
+
+if [ -z $1 ] # show usage
+then
+  echo "
+Usage: buttersync <command> [<path> [<target>]]
+
+commands:
+  create	create a snapshot
+  cp		copy snapshot localy
+  sync		sync snapshot to remote destination
+  export	export snapshot to a external drive. Don't have to be a btrfs filesystem.
+  import	import from a previously exported snapshot.
+
+path target: 	may also be defined in $configfile
+target: 		only for cp and sync command
+"
+exit
+fi
+
+source $configfile
+# if not defined in settings file
+if [ -z $snapname ]; then snapname=$(TZ=GMT date +@GMT-%Y.%m.%d-%H.%M.%S); fi
+if [ -z $snappattern ]; then snappattern="@GMT-????.??.??-??.??.??"; fi
+if [ -z $snapfolder ]; then snapfolder=".snapshot"; fi
+
+if [ -z $source ]; then echo "source must be defined in settings file"; exit 1; fi
+if [ -z $host ]; then echo "host must be defined in settings file"; exit 1; fi
+
+
+# check for include file. Take the basic includefile for all operation if a specific include file is not found.
+if [ -f "./.buttersync-include" ]; then includefile="./.buttersync-include"; fi
+if ( [ $1 == "cp" ]   && [ -f "./.buttersync-include-local" ]  ); then includefile="./.buttersync-include-local"; fi
+if ( [ $1 == "sync" ] && [ -f "./.buttersync-include-remote" ] ); then includefile="./.buttersync-include-remote"; fi
+if [ -z $includefile ]; then echo "includefile not found"; exit 1; fi
+
+exit ### this far
+
+if [ $1 == "create" ]
+then
+ ./buttersync-create.sh
+ exit
+fi
+
+if [ $1 == "cp" ]
+then
+ ./buttersync-local-copy.sh
+ exit
+fi
+
+if [ $1 == "sync" ]
+then
+ ./buttersync-remote-sync.sh
+ exit
+fi
+
+if [ $1 == "export" ]
+then
+ echo "This function is not implemented yet"
+ exit
+fi
+
+if [ $1 == "import" ]
+then
+ echo "This function is not implemented yet"
+ exit
+fi
