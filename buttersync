@@ -62,7 +62,60 @@ if [ -z $host ]; then echo "host must be defined in settings file"; exit 1; fi
 if [ -f "./.buttersync-include" ]; then includefile="./.buttersync-include"; fi
 if ( [ $1 == "cp" ]   && [ -f "./.buttersync-include-local" ]  ); then includefile="./.buttersync-include-local"; fi
 if ( [ $1 == "sync" ] && [ -f "./.buttersync-include-remote" ] ); then includefile="./.buttersync-include-remote"; fi
-if [ -z $includefile ]; then echo "includefile not found"; exit 1; fi
+
+if ( [ -z $includefile ] && [ -z $2 ] )
+then
+  echo "no subvolume given"
+  exit 1
+fi
+
+if [ -z $2 ]
+then
+  include=$(cat $includefile)
+else
+  include=$2
+fi
+
+for loopfolder in $include
+do
+echo "## $loopfolder"
+
+# check pid
+if [ -f /tmp/buttersync-$loopfolder ]; then
+    ps -p $(cat /tmp/buttersync-$loopfolder)&>/dev/null
+    if [ $? == 0 ]; then
+        echo "$loopfolder: Another process of buttersync is accessing this directory. Try again later"
+        continue
+    fi
+fi
+echo $$>/tmp/buttersync-$loopfolder
+
+if [ $1 == "create" ] ## buttersync create
+  then
+  # create folder
+    if [ ! -d "$source/$loopfolder/$snapfolder" ]; then
+      mkdir $source/$loopfolder/$snapfolder
+    fi
+
+  #create snapshot
+    btrfs sub snap -r $source/$loopfolder $source/$loopfolder/$snapfolder/$snapname
+
+  #delete old snapshot
+  if [ ! -z $Bcount ]
+  then
+    ls -dr $source/$loopfolder/$snapfolder/$snappattern | tail -n +$Bcount | while read snapshot ; do
+    btrfs sub del $snapshot
+    done
+  fi
+fi
+
+
+
+
+
+
+rm /tmp/buttersync-$loopfolder
+done
 
 exit ### this far
 
