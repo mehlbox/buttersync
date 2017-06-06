@@ -1,49 +1,4 @@
 #!/bin/bash
-# general
-if [ "$(id -u)" != "0" ]; then echo "This script must be run as root"; exit 1; fi
-
-# check for setting file in the buttersync directory or in the directory above
-if [ -f $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/settings ]; then
-    source $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/settings
-else
-    if [ -f $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../settings ]; then
-        source $( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../settings
-    else
-        echo "cannot find settings file"
-        exit 1
-    fi
-fi
-
-# check for include file. Use basic setting if specific setting does not exist.
-if [ -f "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../.buttersync-include-local" ]
-then
-	includefile="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../.buttersync-include-local"
-else
-	if [ -f "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../.buttersync-include" ]
-	then
-		includefile="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../.buttersync-include"
-	else
-		echo "include file not found"
-		exit 1
-	fi
-fi
-# if not defined in settings file
-if [ -z $snapname ]; then snapname=$(TZ=GMT date +@GMT-%Y.%m.%d-%H.%M.%S); fi
-if [ -z $snappattern ]; then snappattern="@GMT-????.??.??-??.??.??"; fi
-if [ -z $snapfolder ]; then snapfolder=".snapshot"; fi
-
-if [ -z $source ]; then echo "source must be defined in settings file"; exit 1; fi
-
-# specific
-if [ -z $Lcount ]; then echo "Lcount must be defined in settings file"; exit 1; fi
-
-
-
-
-
-
-
-
 while read loopfolder
 do #for each folder
 
