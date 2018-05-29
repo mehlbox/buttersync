@@ -101,7 +101,7 @@ if [ ! -f $source/$loopfolder/$snapfolder/.buttersync-syncfile_*~*.tmp ]; then
 #Start
 #make file
     echo "$loopfolder: preparing file for transfer... Snapshot $parent will be updated with $curent"
-    btrfs send $optionP $source/$loopfolder/$snapfolder/$curent -f $source/$loopfolder/$snapfolder/.buttersync-prepfile_$parent~$curent.tmp
+    btrfs send -f $source/$loopfolder/$snapfolder/.buttersync-prepfile_$parent~$curent.tmp $optionP $source/$loopfolder/$snapfolder/$curent
     if [ $? == 0 ]; then
       mv $source/$loopfolder/$snapfolder/.buttersync-prepfile_$parent~$curent.tmp $source/$loopfolder/$snapfolder/.buttersync-syncfile_$parent~$curent.tmp
     else
