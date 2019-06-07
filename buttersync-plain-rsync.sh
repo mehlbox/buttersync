@@ -31,12 +31,11 @@ if [ -z $snapfolder ]; then snapfolder=".snapshot"; fi
 if [ -z "$source" ]; then echo "source must be defined in settings file"; exit 1; fi
 
 # specific
-if [ -z $Rcount ]; then echo "Rcount must be defined in settings file"; exit 1; fi
+if [ -z $Pcount ]; then echo "Rcount must be defined in settings file"; exit 1; fi
 if [ -z $host ]; then echo "host must be defined in settings file"; exit 1; fi
-if [ -z $port ]; then port=22; fi
 
 #check if connection can be established
-if ssh $host -n -p$port exit
+if ssh $host -n exit
 then
   echo "Connection checked"
 else
@@ -67,13 +66,13 @@ do #for each folder
   #Start
 
   # create folder if necessary
-  if ssh $host -n -p$port "[ ! -d '$Rtarget/$loopfolder' ]" ;then
-     ssh $host -n -p$port mkdir "$Rtarget/$loopfolder"
+  if ssh $host -n "[ ! -d '$Ptarget/$loopfolder' ]" ;then
+     ssh $host -n mkdir "$Ptarget/$loopfolder"
   fi
 
   #transfer snapshot with rsync
   echo "$loopfolder: File transfer: "$(du -sh "$source/$loopfolder/$snapfolder")
-  rsync -e "ssh -p$port" -aP "--exclude=$snapfolder" "$source/$loopfolder/$snapfolder/$curent" "$host:'$Rtarget/$loopfolder/'"
+  rsync -e "ssh " -aP "--exclude=$snapfolder" "$source/$loopfolder/$snapfolder/$curent" "$host:'$Ptarget/$loopfolder/'"
   if [ $? ]
   then
    echo "sync done"
@@ -83,11 +82,11 @@ do #for each folder
   fi
 
   #delete old snapshot
-  if [ ! -z $Rcount ]
+  if [ ! -z $Pcount ]
   then
-    ssh $host -n -p$port ls -dr '$Rtarget/$loopfolder/$snappattern' | tail -n +$Rcount | while read "snapshot"
+    ssh $host -n ls -dr '$Ptarget/$loopfolder/$snappattern' | tail -n +$Pcount | while read "snapshot"
     do
-      ssh $host -n -p$port echo  "REMOVE: $snapshot"
+      ssh $host -n echo  "REMOVE: $snapshot"
       echo  "REMOVE: $snapshot"
     done
   fi

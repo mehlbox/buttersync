@@ -10,10 +10,13 @@ Lcount=30
 
 ## remote copy
 host="mehlbox@domain.com"
-port="22"
 Rtarget="/media/d99cf066-391d-46c1-98ea-f470037ef4bc/BACKUP_mehlbox"
 Rcount=30
 
+## plain copy
+host="mehlbox@domain.com"
+Ptarget="/media/d99cf066-391d-46c1-98ea-f470037ef4bc/BACKUP_mehlbox"
+Pcount=30
 
 
 ## optional settings
