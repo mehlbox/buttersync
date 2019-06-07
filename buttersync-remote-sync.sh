@@ -86,7 +86,7 @@ if [ ! -f "$source/$loopfolder/$snapfolder/.buttersync-syncfile_*~*.tmp" ]; then
   curent=$(ls -1 "$source/$loopfolder/$snapfolder" | tail -n 1)
 
   #check if folder exists in destination
-  if ssh $host -n '[ -d  "$Ltarget/$loopfolder/$curent" ]'
+  if ssh $host -n '[ -d  "$Rtarget/$loopfolder/$curent" ]'
   then
     echo "$loopfolder: nothing to be transferred. Snapshot $curent already exists"
     continue
