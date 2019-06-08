@@ -65,22 +65,22 @@ do #for each folder
   fi
 
 #check if unfinished snapshot on target exist
-if ssh $host -n '[ -f "$Rtarget/$loopfolder/".buttersync-unfinished.mark ]' ;then
-echo $(ssh $host -n cat "$Rtarget/$loopfolder/".buttersync-unfinished.mark)
+if ssh $host -n "[ -f \"$Rtarget/$loopfolder/\".buttersync-unfinished.mark ]" ;then
+echo $(ssh $host -n "cat \"$Rtarget/$loopfolder/\".buttersync-unfinished.mark")
       echo "found unfinished snapshot. deleting..."
-      ssh $host -n btrfs sub del "$Rtarget/$loopfolder/"$(ssh $host -n cat "$Rtarget/$loopfolder/".buttersync-unfinished.mark)
-      ssh $host -n rm "$Rtarget/$loopfolder/".buttersync-unfinished.mark
+      ssh $host -n "btrfs sub del \"$Rtarget/$loopfolder/\"$(ssh $host -n cat \"$Rtarget/$loopfolder/\".buttersync-unfinished.mark)"
+      ssh $host -n "rm \"$Rtarget/$loopfolder/\".buttersync-unfinished.mark"
 fi
 
-#check if unfinished syncfile exist
+#check if syncfile exist
 if [ ! -f "$source/$loopfolder/$snapfolder/".buttersync-syncfile_*~*.tmp ]; then
 
 #determine names. Curent snapshot will be based on parent snapshot. Just the differences will be transferred
   unset optionP
   unset parent
-  if ssh $host -n ls -d1 "\"$Rtarget/$loopfolder/@GMT\"*" #&>/dev/null
+  if ssh $host -n "ls -d1 \"$Rtarget/$loopfolder/@GMT\"*" &>/dev/null
   then
-    parent=$(ssh $host -n ls -1 "\"$Rtarget/$loopfolder\"" | tail -n 1)
+    parent=$(ssh $host -n "ls -1 \"$Rtarget/$loopfolder\"" | tail -n 1)
     optionP="$source/$loopfolder/$snapfolder/$parent"
   fi
   curent=$(ls -1 "$source/$loopfolder/$snapfolder" | tail -n 1)
@@ -94,6 +94,7 @@ if [ ! -f "$source/$loopfolder/$snapfolder/".buttersync-syncfile_*~*.tmp ]; then
 
 #Start
 
+echo "create btrfs file"
 #prepare file
   if [ -z "$optionP" ]
   then
@@ -116,37 +117,41 @@ else
 fi #(from check if unfinished snapshot exist)
 
 # create folder if necessary
-if ssh $host -n '[ ! -d "$Rtarget/$loopfolder" ]' ;then
-   ssh $host -n mkdir "$Rtarget/$loopfolder"
+if ssh $host -n "[ ! -d \"$Rtarget/$loopfolder\" ]";then
+   ssh $host -n "mkdir \"$Rtarget/$loopfolder\""
 fi
 
+echo "transfer file with rsync"
 #transfer file with rsync
     echo "$loopfolder: File transfer: "$(du -sh "$source/$loopfolder/$snapfolder/".buttersync-syncfile_*~*.tmp)
-    rsync -e "ssh " -P "$source/$loopfolder/$snapfolder/".buttersync-syncfile_*~*.tmp "$host:$Rtarget/$loopfolder/"
+    rsync -e ssh -P "$source/$loopfolder/$snapfolder/".buttersync-syncfile_*~*.tmp "$host:\"$Rtarget/$loopfolder/\""
     if [ $? != 0 ]; then
       echo "$loopfolder: error during rsync file transfer."
       continue
     fi
 
+echo "create snapshot from file"
 #create snapshot from file
-    ssh $host -n "echo $curent > $Rtarget/$loopfolder/".buttersync-unfinished.mark
-    ssh $host -n btrfs receive -f "$Rtarget/$loopfolder/".buttersync-syncfile_*~*.tmp "$Rtarget/$loopfolder"
+    ssh $host -n "echo \"$curent\" > \"$Rtarget/$loopfolder/\".buttersync-unfinished.mark"
+    ssh $host -n "btrfs receive -f \"$Rtarget/$loopfolder/\".buttersync-syncfile_*~*.tmp \"$Rtarget/$loopfolder\""
     if [ $? == 0 ]; then
-      ssh $host -n rm "$Rtarget/$loopfolder/".buttersync-unfinished.mark
-      ssh $host -n rm "$Rtarget/$loopfolder/".buttersync-syncfile_*~*.tmp
+      ssh $host -n "rm \"$Rtarget/$loopfolder/\".buttersync-unfinished.mark"
+      ssh $host -n "rm \"$Rtarget/$loopfolder/\".buttersync-syncfile_*~*.tmp"
       rm "$source/$loopfolder/$snapfolder/".buttersync-syncfile_*~*.tmp
     else
       echo "$loopfolder: error during snapshot creation."
-      ssh $host -n btrfs sub del "$Rtarget/$loopfolder/$curent"
+      ssh $host -n "btrfs sub del \"$Rtarget/$loopfolder/$curent\""
       continue
     fi
 
+echo "delete old snapshots"
 #delete old snapshot
 if [ ! -z $Rcount ]
 then
-  ssh $host -n ls -dr "$Rtarget/$loopfolder/$snappattern" | tail -n +$Rcount | while read "snapshot"
+  ssh $host -n "ls -dr \"$Rtarget/$loopfolder/\"$snappattern" | tail -n +$Rcount | while read "snapshot"
   do
-    ssh $host -n btrfs sub del "$snapshot"
+    echo "delete $snapshot"
+    echo ssh $host -n "btrfs sub del \"$snapshot\""
   done
 fi
 
