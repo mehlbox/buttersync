@@ -83,11 +83,12 @@ do #for each folder
 
   #delete old snapshot
   if [ ! -z $Pcount ]
+  echo "check for old snapshots"
   then
-    ssh $Phost -n ls -dr '$Ptarget/$loopfolder/$snappattern' | tail -n +$Pcount | while read "snapshot"
+    ssh $Phost -n "ls -dr \"$Ptarget\"/\"$loopfolder\"/$snappattern" | tail -n +$Pcount | while read "snapshot"
     do
-      ssh $Phost -n echo  "REMOVE: $snapshot"
       echo  "REMOVE: $snapshot"
+      ssh $Phost -n "rm -r \"$snapshot\""
     done
   fi
 

@@ -151,7 +151,7 @@ then
   ssh $host -n "ls -dr \"$Rtarget/$loopfolder/\"$snappattern" | tail -n +$Rcount | while read "snapshot"
   do
     echo "delete $snapshot"
-    echo ssh $host -n "btrfs sub del \"$snapshot\""
+    ssh $host -n "btrfs sub del \"$snapshot\""
   done
 fi
 
