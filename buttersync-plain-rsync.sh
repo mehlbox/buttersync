@@ -47,7 +47,7 @@ while read "loopfolder"
 do #for each folder
 
   #check for empty line in include.db and skip it
-  if [[ "$loopfolder" == [^[:space:]] ]]; then
+  if [[ ! "$loopfolder" =~ [^[:space:]] ]]; then
     continue
   fi
 
